@@ -1,14 +1,9 @@
-/**
- * @typedef {object} Block
- * @property {number} index The index
- * @property {Date} timestamp The Date of when the block was created
- * @property {Block[]} transactions Instance's array of new transactions
- * @property {number} nonce Proof of work
- * @property {string} hash Data from the new block hashed into a string
- * @property {string} previousBlockHash Dta from the new block hashed into a string
- */
+import { Block, Transaction } from './typeDefs';
 
 class Blockchain {
+	chain: Block[];
+	newTransactions: Transaction[]
+
 	constructor() {
 		this.chain = [];
 		this.newTransactions = [];
@@ -21,8 +16,8 @@ class Blockchain {
 	 * @param {string} hash Data from the new block hashed into a string
 	 * @returns {Block} block object
 	 */
-	createNewBlock(nonce, previousBlockHash, hash) {
-		const newBlock = {
+	createNewBlock(nonce: number, previousBlockHash: string, hash: string): Block {
+		const newBlock: Block = {
 			index: this.chain.length + 1,
 			timestamp: Date.now(),
 			transactions: this.newTransactions,
@@ -40,9 +35,25 @@ class Blockchain {
 	/**
 	 * @returns {Block} The last block of the chain
 	 */
-	getLastBlock() {
+	getLastBlock(): Block {
 		return this.chain[this.chain.length - 1];
+	}
+
+	/**
+	 * Creates a transaction object and pushes it into the new transactions array
+	 * @param {number} amount Amount that is being sent in this transaction
+	 * @param {string} sender A sender's address
+	 * @param {string} recipient A recipient's address
+	 */
+	createNewTransaction(amount: number, sender: string, recipient: string): void {
+		const newTransaction = {
+			amount: amount,
+			sender: sender,
+			recipient: recipient
+		};
+
+		this.newTransactions.push(newTransaction);
 	}
 }
 
-module.exports = Blockchain;
+export default Blockchain;
